@@ -132,7 +132,7 @@ class SettingsWidget extends StatelessWidget {
           leading: Image.asset(
             image,
             height: height,
-            color: yellowColor,
+            color: accentColor,
             width: width),
           title: PublicText(
             title: title,
