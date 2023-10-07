@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../common_widgets/public_methods.dart';
 import '../../constants.dart';
+import '../../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,13 +23,12 @@ class Story {
   int? durationInMinutes;
   bool? isPremium;
 
-  Story(
-      {required this.id,
-      this.image,
-      this.title,
-      this.trackName,
-      this.durationInMinutes,
-      this.isPremium});
+  Story({required this.id,
+    this.image,
+    this.title,
+    this.trackName,
+    this.durationInMinutes,
+    this.isPremium});
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 1,
       image: "assets/images/cat_reading_book.png",
-      title: "The Cat Does Not Sleep",
+      title: "BedTimeStories__catDoesNotSleep",
       trackName: 'story1.mp3',
       durationInMinutes: 20,
       isPremium: false,
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 2,
       image: "assets/images/moon_in_night.png",
-      title: "Gift for the Moon",
+      title: "BedTimeStories__giftForTheMoon",
       trackName: 'story2.mp3',
       durationInMinutes: 11,
       isPremium: false,
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 3,
       image: "assets/images/girl_doing_magic.png",
-      title: "Believing in Magic",
+      title: "BedTimeStories__believingInMagic",
       trackName: 'tera_zikr.mp3',
       durationInMinutes: 9,
       isPremium: true,
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 4,
       image: "assets/images/candy_land.png",
-      title: "Candy Land",
+      title: "BedTimeStories__candyLand",
       trackName: 'tera_zikr.mp3',
       durationInMinutes: 20,
       isPremium: true,
@@ -67,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 5,
       image: "assets/images/moon_in_night.png",
-      title: "Find your Rainbow",
+      title: "BedTimeStories__findYourRainbow",
       trackName: 'tera_zikr.mp3',
       durationInMinutes: 16,
       isPremium: true,
@@ -75,13 +76,36 @@ class _HomeScreenState extends State<HomeScreen> {
     Story(
       id: 1,
       image: "assets/images/cat_reading_book.png",
-      title: "Believe in your dream",
+      title: "BedTimeStories__believeInYourDream",
       trackName: 'story1.mp3',
       durationInMinutes: 20,
       isPremium: true,
     ),
 
   ];
+  List<Map<String, dynamic>> storiesLibraryItems = [
+    {
+      'image': "assets/icons/star.png",
+      'title': "500+min.of_content",
+    },
+    {
+      'image': "assets/icons/star.png",
+      'title': "100% Kid-safe",
+    },
+    {
+      'image': "assets/icons/star.png",
+      'title': "Calm and sleep",
+    },
+    {
+      'image': "assets/icons/star.png",
+      'title': "Playlist editing",
+    },
+    {
+      'image': "assets/icons/star.png",
+      'title': "Lifetime access",
+    },
+  ];
+
   int playingId = 0;
   int loadedTrack = 0;
   Duration position = Duration.zero;
@@ -116,11 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: mainColor,
         elevation: 5,
-        title: PublicText(
-          title: "Bedtime Stories",
-          fontSize: 23,
-          fontWeight: FontWeight.w500,
-          titleColor: whiteColor,
+        title: Text(
+          "Bedtime Stories",
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w500,
+            color: whiteColor,
+          ),
         ),
         actions: [
           AppBarWidget(
@@ -128,14 +154,160 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icons.queue_music,
             height: 22,
             width: 22,
-            onTap: () {},
+            onTap: () {
+              showAlertDialog(
+                context,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14),
+                        child: PublicText(
+                          title: "Help Your Child Fall Asleep",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          titleColor: blackColor,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: PublicText(
+                          title: "Open the entire library. You pay only\nonce!",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          titleColor: blackColor,
+                        ),
+                      ),
+                      SizedBox(height: 15,),
+                      ...List.generate(storiesLibraryItems.length, (index) {
+                        return StoryLibraryItem(
+                          image: "${storiesLibraryItems[index]["image"]}",
+                          title: "${storiesLibraryItems[index]["title"]}",
+                        );
+                      }),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              style: ButtonStyle(
+                                textStyle: MaterialStateProperty.all(
+                                    const TextStyle(
+                                        color: mainColor
+                                    )
+                                )
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "CANCEL", style: TextStyle(
+                                  color: blackColor.withOpacity(0.5),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16
+                              ),),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                // openNetworkSettings();
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                "BUY RS 499.00",
+                                style: TextStyle(
+                                  color: mainColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           AppBarWidget(
             // icon: "assets/icons/internet.png",
             icon: Icons.language,
             height: 22,
             width: 22,
-            onTap: () {},
+            onTap: () {
+              showAlertDialog(
+                context,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: PublicText(
+                          title: "Voice Language",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          titleColor: blackColor,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top:14,bottom: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "CANCEL", style: TextStyle(
+                                  color: blackColor.withOpacity(0.5),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16
+                              ),),
+                            ),
+                            Sbw(width: 0.04,),
+                            GestureDetector(
+                              onTap: () async {
+                                context.setLocale(const Locale('fr','FR'),);
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                "PYCCKNN",
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                context.setLocale(const Locale('en','US'),);
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                "ENGLISH",
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           AppBarWidget(
             // icon: "assets/icons/setting.png",
@@ -178,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -218,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         playing: playingId == stories[index].id,
                         isTrackLoaded: loadedTrack == stories[index].id,
                         onTap: () async {
-                          if(stories[index].isPremium == true){
+                          if (stories[index].isPremium == true) {
                             return;
                           }
                           if (playingId == stories[index].id) {
@@ -242,18 +414,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             data: SliderThemeData(
                                 trackShape: CustomTrackShape(),
                                 thumbShape:
-                                    RoundSliderThumbShape(enabledThumbRadius: 7),
+                                RoundSliderThumbShape(enabledThumbRadius: 7),
                                 trackHeight: 1.8,
                                 activeTrackColor: accentColor,
                                 inactiveTrackColor: whiteColor.withOpacity(0.5),
                                 thumbColor: accentColor),
                             child: Slider(
-
                               min: 0,
                               value: position.inSeconds.toDouble(),
                               max: duration.inSeconds.toDouble(),
                               onChanged: (value) async {
-                                final position = Duration(seconds: value.toInt());
+                                final position = Duration(
+                                    seconds: value.toInt());
                                 await audioPlayer.seek(position);
                                 await audioPlayer.resume();
                                 log('MK: onchanged: ');
@@ -277,6 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 class CustomTrackShape extends RoundedRectSliderTrackShape {
   @override
   Rect getPreferredRect({
@@ -295,13 +468,12 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
 }
 
 class StoriesWidget extends StatelessWidget {
-  const StoriesWidget(
-      {super.key,
-      this.playing = false,
-      required this.onTap,
-      required this.child,
-      required this.story,
-      this.isTrackLoaded = false});
+  const StoriesWidget({super.key,
+    this.playing = false,
+    required this.onTap,
+    required this.child,
+    required this.story,
+    this.isTrackLoaded = false});
 
   final Story story;
 
@@ -355,7 +527,7 @@ class StoriesWidget extends StatelessWidget {
                                 height: 1.2,
                                 fontWeight: FontWeight.w500,
                                 color: whiteColor.withOpacity(0.8),
-                              )),
+                              )).tr(),
                         ],
                       ),
                     ),
@@ -398,27 +570,27 @@ class StoriesWidget extends StatelessWidget {
                     onTap: onTap,
                     child: story.isPremium == true
                         ? Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Icon(
-                              Icons.lock,
-                              color: whiteColor.withOpacity(0.3),
-                              size: 26,
-                            ),
-                          )
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(
+                        Icons.lock,
+                        color: whiteColor.withOpacity(0.3),
+                        size: 26,
+                      ),
+                    )
                         : Icon(
-                            playing ? Icons.pause : Icons.play_arrow,
-                            color: accentColor,
-                            size: 44,
-                            // height: 26,
-                            // width: 23,
-                            // fit: BoxFit.contain,
-                          ),
+                      playing ? Icons.pause : Icons.play_arrow,
+                      color: accentColor,
+                      size: 44,
+                      // height: 26,
+                      // width: 23,
+                      // fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               )
             ],
           ),
-          isTrackLoaded ? Container(height: 55, child: child) : const SizedBox()
+          isTrackLoaded ? SizedBox(height: 55, child: child) : const SizedBox()
         ],
       ),
     );
@@ -456,13 +628,12 @@ class AppBarWidget extends StatelessWidget {
 }
 
 class PublicImage extends StatelessWidget {
-  const PublicImage(
-      {super.key,
-      required this.image,
-      this.height = 1,
-      this.width = 1,
-      this.color = mainColor,
-      this.fit = BoxFit.contain});
+  const PublicImage({super.key,
+    required this.image,
+    this.height = 1,
+    this.width = 1,
+    this.color = mainColor,
+    this.fit = BoxFit.contain});
 
   final String image;
   final double height;
@@ -478,6 +649,32 @@ class PublicImage extends StatelessWidget {
       height: height,
       width: width,
       fit: fit,
+    );
+  }
+}
+
+class StoryLibraryItem extends StatelessWidget {
+  const StoryLibraryItem({Key? key, required this.image, required this.title}) : super(key: key);
+  final String image;
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset(
+          image,
+          fit: BoxFit.contain,
+          height: 20,
+          width: 20,
+        ),
+        Sbw(width: 0.005,),
+        PublicText(
+          title: title,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          titleColor: blackColor,
+        ),
+      ],
     );
   }
 }
