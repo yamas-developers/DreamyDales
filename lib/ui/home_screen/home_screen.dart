@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       durationInMinutes: 20,
       isPremium: false,
     ),
+
     Story(
       id: 2,
       image: "assets/images/moon_in_night.png",
