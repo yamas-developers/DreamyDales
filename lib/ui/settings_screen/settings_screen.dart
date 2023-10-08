@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../common_widgets/public_methods.dart';
 import '../../constants.dart';
@@ -52,35 +53,294 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsWidget(
                   title: "Rate the App",
                   image: "assets/icons/star.png",
-                  onTap: (){},
+                  onTap: (){
+                    showAlertDialog(
+                      context,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  PublicText(
+                                    title: "I LIKE THE APP",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    titleColor: mainColor,
+                                  ),
+                                  Sbw(width: 0.015,),
+                                  Icon(
+                                    Icons.thumb_up_alt_rounded,
+                                    color: accentColor,
+                                    size: 20
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 25),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  PublicText(
+                                    title: "I DON'T LIKE THE APP",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    titleColor: mainColor,
+                                  ),
+                                  Sbw(width: 0.015,),
+                                  Icon(
+                                    Icons.thumb_down_alt_rounded,
+                                    color: accentColor,
+                                    size: 20
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:2,bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "CANCEL", style: TextStyle(
+                                        color: blackColor.withOpacity(0.5),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   height: 23,
                   width: 23,
                 ),
                 SettingsWidget(
                   title: "Privacy Policy",
                   image: "assets/icons/privacy_policy.png",
-                  onTap: (){},
+                  onTap: (){
+                    showAlertDialog(
+                      context,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14),
+                              child: PublicText(
+                                title: "Privacy Policy",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                titleColor: blackColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: PublicText(
+                                title: "We do not collect or share data. The\n"
+                                    "app is ad-free and 100% kid-safe.\n\n"
+                                    "Contact email:info.stasapps@gmail\n.com",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                titleColor: blackColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:12,bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "OK", style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   height: 25,
                   width: 25,
                 ),
                 SettingsWidget(
                   title: "Restore Purchases",
                   image: "assets/icons/purchase.png",
-                  onTap: (){},
+                  onTap: (){
+                    showAlertDialog(
+                      context,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14),
+                              child: PublicText(
+                                title: "Please click the BUY button again.\n"
+                                    "Your purchases will be restored and\n"
+                                    "the money will not be debited. The\n"
+                                    "purchase account must match\nthe current account",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                titleColor: blackColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:12,bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "OK", style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   height: 25,
                   width: 25,
                 ),
                 SettingsWidget(
                   title: "Contact Us",
                   image: "assets/icons/contact_us.png",
-                  onTap: (){},
+                  onTap: (){
+                    showAlertDialog(
+                      context,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 14),
+                              child: PublicText(
+                                title: "If you have any question, please\n"
+                                    "email us at info.stasapp@gmail\n.com",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                titleColor: blackColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:12,bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "OK", style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   height: 25,
                   width: 25,
                 ),
                 SettingsWidget(
                   title: "Share the App",
                   image: "assets/icons/share.png",
-                  onTap: (){},
+                  onTap: (){
+                    showAlertDialog(
+                      context,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 14),
+                              child: PublicText(
+                                title: "Please, share the link to the app\nwith your friends",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                titleColor: blackColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:15,bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "OK", style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                  Sbw(width: 0.1,),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Clipboard.setData(ClipboardData(text: "Link"));
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "COPY THE LINK", style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16
+                                    ),),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   height: 23,
                   width: 23,
                 ),
