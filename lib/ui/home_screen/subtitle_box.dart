@@ -1,3 +1,4 @@
+import 'package:bedtime_stories/providers/favorite_provider.dart';
 import 'package:bedtime_stories/providers/subtitle_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,12 +10,14 @@ class SubtitleBox extends StatefulWidget {
   final List<Subtitle> subtitles;
   final int currentPosition;
   final int currentDuration;
+  final int storyId;
 
   SubtitleBox({
     super.key,
     required this.subtitles,
     required this.currentPosition,
     required this.currentDuration,
+    required this.storyId,
   });
 
   @override
@@ -64,74 +67,94 @@ class _SubtitleBoxState extends State<SubtitleBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: mainColor,
-      appBar: AppBar(
-        backgroundColor: mainColor,
-        elevation: 5,
-        foregroundColor: whiteColor,
-        title: const Text(
-          "Story Lyrics",
-          style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.w500,
-            color: whiteColor,
-          ),
-        ),
-      ),
-      body: Consumer<SubtitlesProvider>(builder: (context, subPro, _) {
-        _currentSubtitle =
-            _getCurrentSubtitle(subPro.currentPosition.inMilliseconds);
-        // _scrollToCurrentSubtitle();
-        return Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [mainColor, primaryColor],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
+    return Consumer<FavoritesProvider>(
+        builder: (context, FavoritesProvider favPro, _) {
+      bool isFavorite = favPro.favorites.contains(widget.storyId);
+      return Scaffold(
+        // backgroundColor: mainColor,
+        appBar: AppBar(
+          backgroundColor: mainColor,
+          elevation: 5,
+          foregroundColor: whiteColor,
+          title: const Text(
+            "Story Lyrics",
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.w500,
+              color: whiteColor,
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: widget.subtitles.length,
-                        // itemExtent: 80, // Adjust the item extent as per your requirements
-                        itemBuilder: (context, index) {
-                          final subtitle = widget.subtitles[index];
-                          return Text(
-                            subtitle.data,
-                            key: GlobalObjectKey(subtitle.index),
-                            // key: subtitle == _currentSubtitle ? key : null,
-                            style: TextStyle(
-                              fontSize: subtitle == _currentSubtitle ? 34 : 24,
-                              fontWeight: subtitle == _currentSubtitle
-                                  ? FontWeight.w900
-                                  : FontWeight.w500,
-                              color: subtitle == _currentSubtitle
-                                  ? accentColor
-                                  : whiteColor,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  if (isFavorite) {
+                    favPro.removeFavorite(widget.storyId);
+                  } else {
+                    favPro.addFavorite(widget.storyId);
+                  }
+                },
+                icon: Icon(
+                  isFavorite ? Icons.star : Icons.star_border_outlined,
+                  color: isFavorite ? accentColor : whiteColor,
+                  size: 30,
+                )),
+          ],
+        ),
+        body: Consumer<SubtitlesProvider>(builder: (context, subPro, _) {
+          _currentSubtitle =
+              _getCurrentSubtitle(subPro.currentPosition.inMilliseconds);
+          // _scrollToCurrentSubtitle();
+          return Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [mainColor, primaryColor],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
-            )
-          ],
-        );
-      }),
-    );
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: widget.subtitles.length,
+                          // itemExtent: 80, // Adjust the item extent as per your requirements
+                          itemBuilder: (context, index) {
+                            final subtitle = widget.subtitles[index];
+                            return Text(
+                              subtitle.data,
+                              key: GlobalObjectKey(subtitle.index),
+                              // key: subtitle == _currentSubtitle ? key : null,
+                              style: TextStyle(
+                                fontSize:
+                                    subtitle == _currentSubtitle ? 34 : 24,
+                                fontWeight: subtitle == _currentSubtitle
+                                    ? FontWeight.w900
+                                    : FontWeight.w500,
+                                color: subtitle == _currentSubtitle
+                                    ? accentColor
+                                    : whiteColor,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        }),
+      );
+    });
   }
 
   void _scrollToCurrentSubtitle() {

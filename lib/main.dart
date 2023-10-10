@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'providers/favorite_provider.dart';
+import 'providers/story_provider.dart';
 import 'providers/subtitle_provider.dart';
 import 'routes/router_helper.dart' as router;
 
@@ -26,7 +28,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SubtitlesProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => SubtitlesProvider()),
+        ChangeNotifierProvider(create: (_) => StoryProvider()),
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -35,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         // home: homeScreen(),
         initialRoute: '/',
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         localizationsDelegates: context.localizationDelegates,

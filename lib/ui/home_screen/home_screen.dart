@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:bedtime_stories/providers/favorite_provider.dart';
 import 'package:bedtime_stories/ui/home_screen/subtitle_box.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:subtitle/subtitle.dart';
 
 import '../../common_widgets/public_methods.dart';
 import '../../constants.dart';
+import '../../models/story.dart';
+import '../../providers/story_provider.dart';
 import '../../providers/subtitle_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,79 +20,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class Story {
-  int id = 0;
-  String? image;
-  String? title;
-  String? subTitle;
-  String? trackName;
-  int? durationInMinutes;
-  bool? isPremium;
-
-  Story(
-      {required this.id,
-      this.image,
-      this.title,
-      this.subTitle,
-      this.trackName,
-      this.durationInMinutes,
-      this.isPremium});
-}
-
 class _HomeScreenState extends State<HomeScreen> {
-  List<Story> stories = [
-    Story(
-      id: 1,
-      image: "assets/images/cat_reading_book.png",
-      title: "BedTimeStories__catDoesNotSleep",
-      subTitle: "story1.srt",
-      trackName: 'story1.mp3',
-      durationInMinutes: 20,
-      isPremium: false,
-    ),
-    Story(
-      id: 2,
-      image: "assets/images/moon_in_night.png",
-      title: "BedTimeStories__giftForTheMoon",
-      subTitle: "story2.srt",
-      trackName: 'story2.mp3',
-      durationInMinutes: 11,
-      isPremium: false,
-    ),
-    Story(
-      id: 3,
-      image: "assets/images/girl_doing_magic.png",
-      title: "BedTimeStories__believingInMagic",
-      trackName: 'tera_zikr.mp3',
-      durationInMinutes: 9,
-      isPremium: true,
-    ),
-    Story(
-      id: 4,
-      image: "assets/images/candy_land.png",
-      title: "BedTimeStories__candyLand",
-      trackName: 'tera_zikr.mp3',
-      durationInMinutes: 20,
-      isPremium: true,
-    ),
-    Story(
-      id: 5,
-      image: "assets/images/moon_in_night.png",
-      title: "BedTimeStories__findYourRainbow",
-      trackName: 'tera_zikr.mp3',
-      durationInMinutes: 16,
-      isPremium: true,
-    ),
-    Story(
-      id: 1,
-      image: "assets/images/cat_reading_book.png",
-      title: "BedTimeStories__believeInYourDream",
-      trackName: 'story1.mp3',
-      durationInMinutes: 20,
-      isPremium: true,
-    ),
-  ];
-
   int playingId = 0;
   int loadedTrack = 0;
 
@@ -98,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Duration duration = Duration.zero;
   final audioPlayer = AudioPlayer();
   List<Subtitle> subtitles = [];
+  int index = 0;
 
   @override
   void initState() {
@@ -115,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // setState(() {
       //   position = event;
       // });
-      context.read<SubtitlesProvider>().currentPosition = Duration(seconds: event.inSeconds+0);
+      context.read<SubtitlesProvider>().currentPosition =
+          Duration(seconds: event.inSeconds + 0);
     });
 
     super.initState();
@@ -185,7 +118,16 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: Consumer<SubtitlesProvider>(builder: (context, subPro, _) {
+      body: Consumer3<SubtitlesProvider, StoryProvider, FavoritesProvider>(
+          builder: (context, subPro, storyPro, favPro, _) {
+        List<Story> stories = [];
+        if (this.index == 1) {
+          stories = storyPro.stories
+              .where((element) => favPro.favorites.contains(element.id))
+              .toList();
+        } else {
+          stories = storyPro.stories;
+        }
         return Stack(
           children: [
             Container(
@@ -253,10 +195,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(
                         height: 5,
                       ),
+                      if (stories.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 48.0),
+                          child: Text(
+                            'No ${this.index == 0 ? 'stories' : 'favorites'} available',
+                            style: TextStyle(
+                              color: accentColor,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
                       ...List.generate(stories.length, (index) {
                         return GestureDetector(
                           onTap: () {
-                            if(loadedTrack == stories[index].id){
+                            if (loadedTrack == stories[index].id) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -265,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       currentPosition:
                                           subPro.currentPosition.inMilliseconds,
                                       currentDuration: duration.inMilliseconds,
+                                      storyId: stories[index].id,
                                     ),
                                   ));
                             }
@@ -354,6 +308,29 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         );
       }),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: blueColor.withOpacity(1),
+        ),
+        child: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              this.index = index;
+            });
+          },
+          // fixedColor: Colors.green,
+          useLegacyColorScheme: true,
+
+          type: BottomNavigationBarType.shifting,
+          selectedItemColor: accentColor,
+          currentIndex: index,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.menu_book), label: 'Stories'),
+            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
+          ],
+        ),
+      ),
     );
   }
 

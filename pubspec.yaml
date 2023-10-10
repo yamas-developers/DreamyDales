@@ -38,7 +38,8 @@ dependencies:
   audioplayers: ^5.2.0
   easy_localization: ^3.0.3
   subtitle:
-  provider: 
+  provider:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
